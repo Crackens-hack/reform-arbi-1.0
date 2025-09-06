@@ -53,6 +53,7 @@ services:
     working_dir: /workspace
     user: "0:0"
     volumes:
+      - ./AGENTS.md:/workspace/AGENTS.md:ro
       - ./codex-rules:/workspace/codex-rules:ro
       - ./custom-codex-refinery:/workspace/custom-codex-refinery
       # raíz suelta propia (persistente del servicio)
@@ -115,6 +116,7 @@ services:
       - API_SECRET=${API_SECRET_BINANCE}
       - CODEX_HOME=/root/.codex
     volumes:
+      - ./AGENTS.md:/workspace/AGENTS.md:ro
       - ./codex-rules:/workspace/codex-rules:ro
       - ./custom-codex-realtime:/workspace/custom-codex-realtime
       - workspace_root_realtime:/workspace
@@ -141,6 +143,7 @@ services:
     working_dir: /workspace
     user: "0:0"
     volumes:
+      - ./AGENTS.md:/workspace/AGENTS.md:ro
       - workspace_root_sentinel:/workspace
       - ./.vscode:/workspace/.vscode
       - ..:/workspace/1-repo-global-solo-lectura:ro

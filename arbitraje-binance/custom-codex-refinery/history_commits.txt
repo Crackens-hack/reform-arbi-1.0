@@ -1,3 +1,0 @@
-# history_commits.txt
-# Formato: [Action-ID] <fecha ISO> <branch> <motor> <resumen>
-

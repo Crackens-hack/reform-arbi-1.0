@@ -1,3 +1,2 @@
-# history_commits.txt
+DEPRECADO: usar `history_git.txt` en este mismo directorio.
 # Formato: [Action-ID] <fecha ISO> <branch> <motor> <resumen>
-

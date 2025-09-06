@@ -1,7 +1,32 @@
-[Action-ID]
-Propuesto por: Codex | Dominus
-Motivo/Objetivo:
-Alcance (archivos/áreas):
-Riesgos/Mitigación:
-Resultado: commit(s) <hash...> | no-op | retroceso
+Fundamentos Git — sentinel
+Alcance: SOLO este contenedor. Eres el rey de Git aquí.
+
+Objetivo
+- Garantizar commits atómicos, trazables y alineados a la visión del contenedor.
+
+Política
+- Granularidad: cada mínimo cambio => un commit.
+- Mensajes: formato `tipo: resumen breve` + cuerpo con contexto.
+- Tipos sugeridos: feat, fix, docs, chore, refactor, test, perf, ci.
+- Prohibido: cambios fuera del contenedor sin autorización de Dominus.
+
+Plantilla de commit
+Subject: <tipo>: <resumen en 72 chars máx>
+
+Cuerpo (opcional, recomendado):
+- Motivo:
+- Alcance (módulos/archivos):
+- Riesgos/impacto:
+- Pruebas/comprobaciones:
+
+Vinculación con history_git.txt
+- Por cada commit/intención, agrega una entrada en `history_git.txt` con: fecha, intención, contexto, archivos, resultado.
+
+Ejemplo
+Subject: feat: alerta de spreads extremos
+
+Motivo: detectar oportunidades inusuales.
+Alcance: src/alerts.py
+Riesgos: bajo, sólo notificaciones.
+Pruebas: dry-run y logs verificados.
 

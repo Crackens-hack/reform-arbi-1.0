@@ -1,0 +1,11 @@
+# history_git — sentinel
+# Registro cronológico de cambios y su contexto. Alinear con commits.
+
+Fecha: ____-__-__ __:__ (UTC)
+Intención: __________________________
+Contexto breve: _____________________
+Archivos/áreas: _____________________
+Acción/Commit: ______________________
+Resultado: (exitoso/fallo/parcial) ___
+Notas: ______________________________
+

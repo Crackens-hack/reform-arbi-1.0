@@ -16,7 +16,7 @@ Beacon Node (estado en simbiosis)
 
 Trazabilidad (convención)
 - Action-ID: `YYYYMMDD-HHMMSS-<rand4>` incluido en commits y archivos de continuidad.
-- Historial de sesión: `custom-codex-<motor>/history_commits.txt`.
+- Historial de sesión: `custom-codex-<motor>/history_git.txt`.
 - Fundamentos/decisiones: `custom-codex-<motor>/fundaments-git.txt`.
 
 Orden sugerido al operar

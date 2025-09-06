@@ -53,6 +53,8 @@ services:
     working_dir: /workspace
     user: "0:0"
     volumes:
+      - ./codex-rules:/workspace/codex-rules:ro
+      - ./custom-codex-refinery:/workspace/custom-codex-refinery
       # raíz suelta propia (persistente del servicio)
       - workspace_root_refinery:/workspace
       # submounts específicos (deben ir después del root para ganar)
@@ -113,6 +115,8 @@ services:
       - API_SECRET=${API_SECRET_BINANCE}
       - CODEX_HOME=/root/.codex
     volumes:
+      - ./codex-rules:/workspace/codex-rules:ro
+      - ./custom-codex-realtime:/workspace/custom-codex-realtime
       - workspace_root_realtime:/workspace
       - ./.vscode:/workspace/.vscode
       - ..:/workspace/1-repo-global-solo-lectura:ro
@@ -144,6 +148,8 @@ services:
       - ./motor_sentinel:/workspace/motor_sentinel:rw
       - ./logs:/workspace/motor_sentinel/logs
       - codex_cache:/root/.codex
+      - ./codex-rules:/workspace/codex-rules:ro
+      - ./custom-codex-sentinel:/workspace/custom-codex-sentinel
     environment:
       - CONTAINER=true
       - NAME=motor_data_sentinel_binance

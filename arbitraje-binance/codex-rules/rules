@@ -1,0 +1,76 @@
+Codex Rules — Base para agentes internos
+
+Propósito
+- Orientar a cada Codex interno dentro de su contenedor: qué puede leer, qué puede modificar y cómo dejar trazabilidad útil para futuras sesiones.
+
+Contexto del Contenedor
+- Estás dentro de un contenedor del stack Binance, con `WORKDIR=/workspace`.
+- Monorepo global en solo lectura: `/workspace/1-repo-global-solo-lectura`.
+- Tu ámbito de trabajo en escritura está limitado a tu motor y su volumen custom:
+  - Código del motor: `/workspace/<motor>/` (p. ej. `motor_sentinel`, `motor_reactor_realtime`, `motor_data_refinery`).
+  - Volumen de continuidad: `/workspace/custom-codex-<motor>/` (p. ej. `custom-codex-sentinel`).
+- No modifiques otros motores ni la raíz global fuera de tu ámbito.
+
+Ámbito de Escritura Permitido
+- Puedes leer todo el repo global (RO). Solo escribe/modifica en:
+  - `/workspace/<motor>/**`
+  - `/workspace/custom-codex-<motor>/**`
+  - El `.git` del motor montado para tus commits locales (ya mapeado por Compose).
+- Cualquier cambio fuera de este ámbito requiere autorización explícita de Dominus.
+
+Ritual de Inicio de Sesión (cada vez)
+1) Lee `/workspace/AGENTS.md` (visión global) y luego este archivo `codex-rules/rules`.
+2) Revisa continuidad previa en tu volumen:
+   - `/workspace/custom-codex-<motor>/history_commits.txt`
+   - `/workspace/custom-codex-<motor>/fundaments-git.txt`
+   - Otros artefactos previos (logs, NEXT.md, etc.).
+3) Define el propósito intrínseco de la sesión (qué vas a lograr ahora) y genera un Action-ID.
+4) Escribe ese propósito en `/workspace/custom-codex-<motor>/purpose_current.md` encabezado por el Action-ID.
+
+Action-ID (identificador de acción)
+- Formato sugerido: `YYYYMMDD-HHMMSS-<rand4>` (ej. `20250906-0115-Z7Q4`).
+- Usa el mismo Action-ID en: propósito, mensajes de commit, `history_commits.txt` y `fundaments-git.txt`.
+
+Git y Documentación Obligatoria
+- Cada commit debe quedar registrado en `/workspace/custom-codex-<motor>/history_commits.txt` con el formato:
+  [Action-ID] <fecha ISO8601> <branch> <scope/motor> <resumen>
+
+- La justificación de cada acción (decisiones, riesgos, alternativas, quién la propuso) debe quedar en
+  `/workspace/custom-codex-<motor>/fundaments-git.txt` con el formato:
+  [Action-ID]
+  Propuesto por: Codex | Dominus
+  Motivo/Objetivo:
+  Alcance (archivos/áreas tocadas):
+  Riesgos/Mitigación:
+  Resultado: commit(s) <hash...> | no-op | retroceso
+
+- Si hubo aprendizaje/retroceso sin commit, igualmente documenta con un Action-ID y marca `Resultado: no-op` o `retroceso`.
+
+Entradas y Salidas
+- Outputs, estados y artefactos de sesión se guardan bajo `/workspace/custom-codex-<motor>/`.
+- No escribas en `/workspace/1-repo-global-solo-lectura`.
+
+Mini‑Checklist por Acción
+1) Leer AGENTS.md y codex-rules; revisar continuidad.
+2) Definir propósito y crear Action-ID.
+3) Esbozar plan breve (3–5 pasos) dentro de tu ámbito.
+4) Ejecutar cambios estrictamente en `/workspace/<motor>` y `/workspace/custom-codex-<motor>`.
+5) Hacer commit(s) con el Action-ID en el mensaje.
+6) Actualizar `history_commits.txt` y `fundaments-git.txt` con el mismo Action-ID.
+7) Registrar próximos pasos en `/workspace/custom-codex-<motor>/NEXT.md` si aplica.
+
+Variables de Entorno de Interés (pueden existir según el motor)
+- `HUB_WS_URL`, `HUB_TOKEN`, `STACK_ID`, `SENTINEL_ID`, `DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `REDIS_HOST`, `REDIS_PORT`, `API_KEY`, `API_SECRET`, `TZ`.
+
+Rutas Conocidas (ejemplos reales del stack Binance)
+- `motor_data_refinery`: `/workspace/motor_data_refinery` y `/workspace/custom-codex-refinery`
+- `motor_reactor_realtime`: `/workspace/motor_reactor_realtime` y `/workspace/custom-codex-realtime`
+- `motor_sentinel`: `/workspace/motor_sentinel` y `/workspace/custom-codex-sentinel`
+
+Permisos y Simbiosis
+- En fase de simbiosis, prioriza claridad y trazabilidad por sobre optimización.
+- Si necesitas tocar fuera de tu ámbito, detente y consulta a Dominus.
+
+Objetivo Final
+- Que cada nueva instancia de Codex en el mismo contenedor pueda continuar sin “preguntas triviales”, leyendo propósito, historia y fundamentos desde `custom-codex-<motor>` y operando con el mismo marco.
+

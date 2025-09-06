@@ -1,0 +1,16 @@
+{
+  "symbol": "str",
+  "bids": [
+    [
+      "float"
+    ]
+  ],
+  "asks": [
+    [
+      "float"
+    ]
+  ],
+  "timestamp": "NoneType",
+  "datetime": "NoneType",
+  "nonce": "NoneType"
+}

@@ -1,0 +1,12 @@
+campo,permitidos
+__OUTPUT__,spot_spot
+base,NOT_FIAT
+quote,NOT_FIAT
+type,spot
+spot,1
+swap,0
+future,0
+option,0
+active,1
+info_status,TRADING
+info_isSpotTradingAllowed,True

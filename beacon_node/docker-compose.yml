@@ -1,0 +1,15 @@
+services:
+  event_hub:
+    build: .
+    container_name: event_hub
+    env_file: .env
+    working_dir: /app
+    networks:
+      - comms_net
+    expose:
+      - "8080"
+
+networks:
+  comms_net:
+    name: comms_net
+    external: true

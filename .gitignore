@@ -1,0 +1,16 @@
+# Logs y salidas
+logs/
+__pycache__/
+*.pyc
+
+# Virtualenvs o caches
+.venv/
+.mypy_cache/
+.pytest_cache/
+.cache/
+
+# Docker
+*.pid
+*.sock
+*.db
+*~ 

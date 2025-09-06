@@ -1,0 +1,5 @@
+contenedores_auxiliares/**/__pycache__/
+contenedores_auxiliares/**/.DS_Store
+contenedores_auxiliares/**/logs/
+contenedores_auxiliares/**/.env
+

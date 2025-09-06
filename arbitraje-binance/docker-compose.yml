@@ -1,0 +1,166 @@
+name: stack-binance
+
+volumes:
+  mariadb:
+  redis:
+  go_mod_cache:
+  go_build_cache:
+  workspace_root_refinery:
+  workspace_root_realtime:
+  workspace_root_sentinel:
+  codex_cache:
+
+networks:
+  backbone: {}
+  comms_net:
+    name: comms_net
+    external: true
+
+services:
+
+  mariadb:
+    image: mariadb:11
+    env_file: .env
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - TZ=${TZ}
+    volumes:
+      - mariadb:/var/lib/mysql
+    restart: always
+    networks: [backbone]
+    expose: ["3306"]
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    volumes:
+      - redis:/data
+    restart: always
+    networks: [backbone]
+    expose: ["6379"]
+
+  motor_data_refinery:
+    build:
+      context: ./motor_data_refinery
+      args:
+        CODEX_VERSION: ${CODEX_VERSION}
+        CODEX_CLI_URL: ${CODEX_CLI_URL}
+        CODEX_SHA256:  ${CODEX_SHA256}
+    env_file: .env
+    working_dir: /workspace
+    user: "0:0"
+    volumes:
+      # raíz suelta propia (persistente del servicio)
+      - workspace_root_refinery:/workspace
+      # submounts específicos (deben ir después del root para ganar)
+      - ./.vscode:/workspace/.vscode
+      # repo global en solo-lectura (contexto completo)
+      - ..:/workspace/1-repo-global-solo-lectura:ro
+      # .git global en escritura para este motor
+      - ../.git:/workspace/motor_data_refinery/.git:rw
+      # tu código cerca y en rw
+      - ./motor_data_refinery:/workspace/motor_data_refinery:rw
+      # extras del servicio
+      - ./logs/logs_motor_data_refinery:/workspace/motor_data_refinery/logs_motor_data_refinery
+      - ./output_data_refinery:/workspace/motor_data_refinery/output_data_refinery
+      # Codex tierra a sembrar
+      - codex_cache:/root/.codex
+    environment:
+      - CONTAINER=true
+      - NAME=motor_data_refinery_binance
+      - SHELL=/bin/bash
+      - DB_HOST=mariadb
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - API_KEY=${API_KEY_BINANCE}
+      - API_SECRET=${API_SECRET_BINANCE}
+      - TZ=${TZ}
+      - CODEX_HOME=/root/.codex
+    depends_on: [mariadb, redis]
+    restart: unless-stopped
+    networks: [backbone]
+
+  motor_reactor_realtime:
+    build:
+      context: ./motor_reactor_realtime
+      args:
+        CODEX_VERSION: ${CODEX_VERSION}
+        CODEX_CLI_URL: ${CODEX_CLI_URL}
+        CODEX_SHA256:  ${CODEX_SHA256}
+    env_file: .env
+    working_dir: /workspace
+    tty: true
+    stdin_open: true
+    command: bash -l -c "tail -f /dev/null"
+    user: "0:0"
+    environment:
+      - CONTAINER=true
+      - NAME=motor_reactor_realtime_binance
+      - SHELL=/bin/bash
+      - GOMODCACHE=/go/pkg/mod
+      - GOCACHE=/root/.cache/go-build
+      - DB_HOST=mariadb
+      - DB_PORT=3306
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - API_KEY=${API_KEY_BINANCE}
+      - API_SECRET=${API_SECRET_BINANCE}
+      - CODEX_HOME=/root/.codex
+    volumes:
+      - workspace_root_realtime:/workspace
+      - ./.vscode:/workspace/.vscode
+      - ..:/workspace/1-repo-global-solo-lectura:ro
+      - ../.git:/workspace/motor_reactor_realtime/.git:rw
+      - ./motor_reactor_realtime:/workspace/motor_reactor_realtime:rw
+      - ./output_data_refinery:/workspace/motor_reactor_realtime/output_data_refinery
+      - codex_cache:/root/.codex
+      - go_mod_cache:/go/pkg/mod
+      - go_build_cache:/root/.cache/go-build
+    depends_on: [mariadb, redis]
+    restart: unless-stopped
+    networks: [backbone]
+
+  motor_sentinel:
+    build:
+      context: ./motor_sentinel
+      args:
+        CODEX_VERSION: ${CODEX_VERSION}
+        CODEX_CLI_URL: ${CODEX_CLI_URL}
+        CODEX_SHA256:  ${CODEX_SHA256}
+    env_file: .env
+    working_dir: /workspace
+    user: "0:0"
+    volumes:
+      - workspace_root_sentinel:/workspace
+      - ./.vscode:/workspace/.vscode
+      - ..:/workspace/1-repo-global-solo-lectura:ro
+      - ../.git:/workspace/motor_sentinel/.git:rw
+      - ./motor_sentinel:/workspace/motor_sentinel:rw
+      - ./logs:/workspace/motor_sentinel/logs
+      - codex_cache:/root/.codex
+    environment:
+      - CONTAINER=true
+      - NAME=motor_data_sentinel_binance
+      - SHELL=/bin/bash
+      - DB_HOST=mariadb
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - HUB_WS_URL=${HUB_WS_URL:-ws://event_hub:8080/ws}
+      - HUB_TOKEN=${HUB_TOKEN:-}
+      - STACK_ID=${STACK_ID:-stack-binance}
+      - SENTINEL_ID=${SENTINEL_ID:-sentinel-01}
+      - CODEX_HOME=/root/.codex
+    depends_on: [mariadb, redis]
+    restart: unless-stopped
+    networks:
+      - backbone
+      - comms_net

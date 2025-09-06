@@ -1,0 +1,46 @@
+# /app/dev/bash/.bash_completion_extras
+# Carga bash-completion del sistema (Debian/Ubuntu/Alpine) si existe
+if ! shopt -oq posix; then
+  if [ -f /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
+  elif [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
+  fi
+fi
+
+# Helper para sourcear el primer archivo que exista
+__source_first() {
+  for f in "$@"; do
+    [ -f "$f" ] && { . "$f"; return 0; }
+  done
+  return 1
+}
+
+# --- Git completion ---
+__source_first \
+  /usr/share/bash-completion/completions/git \
+  /usr/share/git-core/contrib/completion/git-completion.bash \
+  /usr/share/git/completion/git-completion.bash \
+  /etc/bash_completion.d/git
+
+# --- Docker completion (CLI plugin v20+) ---
+__source_first \
+  /usr/share/bash-completion/completions/docker \
+  /etc/bash_completion.d/docker
+
+# --- Docker Compose (según instalación: plugin o binario legacy) ---
+__source_first \
+  /usr/share/bash-completion/completions/docker-compose \
+  /etc/bash_completion.d/docker-compose
+
+# --- Make ---
+__source_first \
+  /usr/share/bash-completion/completions/make \
+  /etc/bash_completion.d/make
+
+# --- Kubectl (si lo usás) ---
+__source_first \
+  /usr/share/bash-completion/completions/kubectl \
+  /etc/bash_completion.d/kubectl
+
+# Podés sumar acá más tools que uses (terraform, helm, gh, etc.)

@@ -74,3 +74,18 @@ Permisos y Simbiosis
 Objetivo Final
 - Que cada nueva instancia de Codex en el mismo contenedor pueda continuar sin “preguntas triviales”, leyendo propósito, historia y fundamentos desde `custom-codex-<motor>` y operando con el mismo marco.
 
+Archivos obligatorios de continuidad (si no existen, créalos)
+- `/workspace/custom-codex-<motor>/purpose_current.md`
+  - Encabezado con `Action-ID` y propósito de la sesión.
+- `/workspace/custom-codex-<motor>/history_commits.txt`
+  - Una línea por commit: `[Action-ID] <fecha ISO> <branch> <motor> <resumen>`
+- `/workspace/custom-codex-<motor>/fundaments-git.txt`
+  - Bloques por acción con plantilla:
+    [Action-ID]
+    Propuesto por: Codex | Dominus
+    Motivo/Objetivo:
+    Alcance (archivos/áreas):
+    Riesgos/Mitigación:
+    Resultado: commit(s) <hash...> | no-op | retroceso
+- `/workspace/custom-codex-<motor>/NEXT.md`
+  - Lista breve de próximos pasos (opcional pero recomendado).

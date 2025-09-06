@@ -1,0 +1,7 @@
+[Action-ID]
+Propuesto por: Codex | Dominus
+Motivo/Objetivo:
+Alcance (archivos/áreas):
+Riesgos/Mitigación:
+Resultado: commit(s) <hash...> | no-op | retroceso
+

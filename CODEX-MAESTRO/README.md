@@ -9,10 +9,10 @@ Piezas clave del stack Binance
 - Reglas de trabajo: `arbitraje-binance/codex-rules/rules` (montado como `/workspace/codex-rules/rules`).
 - Volúmenes de continuidad: `custom-codex-<motor>/` por servicio.
 
-Beacon Node (estado en simbiosis)
-- No monta `AGENTS.md` ni `codex-rules` durante la fase de simbiosis para evitar acoplamientos cruzados.
-- El compose de `beacon_node` queda en pausa “necesaria pero olvidada”: servirá como nodo común para unir y notificar eventos desde los sentinels de cada exchange.
-- En el presente, se experimenta modularmente con sentinels por exchange; cada exchange puede exponer su propio flujo (posible WS), sin reglas Codex aplicadas al hub por ahora.
+Event Hub (antes beacon_node)
+- Servicio hub para recibir eventos de sentinels por exchange (WS) y notificar (p.ej., Telegram). Puede exponer control remoto (pausa/ajustes) si se decide.
+- En simbiosis no montó `AGENTS.md`/`codex-rules` para evitar acoplamientos; hoy se lo documenta como pieza central de eventos.
+- El código vive en `beacon_node/` y el binario/servicio se llama `event_hub`.
 
 Trazabilidad (convención)
 - Action-ID: `YYYYMMDD-HHMMSS-<rand4>` incluido en commits y archivos de continuidad.

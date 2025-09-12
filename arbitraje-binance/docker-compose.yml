@@ -54,7 +54,7 @@ services:
     user: "0:0"
     volumes:
       - ./AGENTS.md:/workspace/AGENTS.md:ro
-      - ../codex-rules:/workspace/codex-rules:ro
+      - ../codex-rules-containers:/workspace/codex-rules-containers:ro
       - ./custom-codex-refinery:/workspace/custom-codex-refinery
       # raíz suelta propia (persistente del servicio)
       - workspace_root_refinery:/workspace
@@ -117,7 +117,7 @@ services:
       - CODEX_HOME=/root/.codex
     volumes:
       - ./AGENTS.md:/workspace/AGENTS.md:ro
-      - ../codex-rules:/workspace/codex-rules:ro
+      - ../codex-rules-containers:/workspace/codex-rules-containers:ro
       - ./custom-codex-realtime:/workspace/custom-codex-realtime
       - workspace_root_realtime:/workspace
       - ./.vscode:/workspace/.vscode
@@ -151,7 +151,7 @@ services:
       - ./motor_sentinel:/workspace/motor_sentinel:rw
       - ./logs:/workspace/motor_sentinel/logs
       - codex_cache:/root/.codex
-      - ../codex-rules:/workspace/codex-rules:ro
+      - ../codex-rules-containers:/workspace/codex-rules-containers:ro
       - ./custom-codex-sentinel:/workspace/custom-codex-sentinel
     environment:
       - CONTAINER=true

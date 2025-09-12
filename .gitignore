@@ -2,7 +2,7 @@
 logs/
 __pycache__/
 *.pyc
-
+datos/
 # Virtualenvs o caches
 .venv/
 .mypy_cache/
@@ -14,3 +14,9 @@ __pycache__/
 *.sock
 *.db
 *~ 
+
+
+dev/
+
+# Referencias no modificables
+/arbitraje-binance/motor_data_refinery/precalificador_primario/

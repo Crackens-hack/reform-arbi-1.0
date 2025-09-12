@@ -31,3 +31,10 @@ dev/
 
 # Salidas de data refinery
 /arbitraje-binance/**/output_data_refinery/
+
+# Ignorar contenedores y docs de Codex
+/codex-rules-containers/
+/CODEX-MAESTRO/
+
+# Salida a nivel de arbitraje-binance
+/arbitraje-binance/output_data_refinery/

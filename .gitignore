@@ -19,7 +19,12 @@ datos/
 dev/
 
 # Dev de todos los motores
-arbitraje-binance/**/dev/
+/arbitraje-binance/**/dev/
+
+# Dev especificados por motor
+/arbitraje-binance/motor_data_refinery/dev/
+/arbitraje-binance/motor_reactor_realtime/dev/
+/arbitraje-binance/motor_sentinel/dev/
 
 # Referencias no modificables
 /arbitraje-binance/motor_data_refinery/precalificador_primario/

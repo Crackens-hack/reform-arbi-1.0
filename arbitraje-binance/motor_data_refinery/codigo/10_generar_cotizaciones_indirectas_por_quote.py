@@ -1,13 +1,18 @@
 # ruta: /codigo/generar_cotizaciones_indirectas_por_quote_binance.py
 
 import os
+import sys
+from pathlib import Path
 import pandas as pd
 from decimal import Decimal, getcontext, InvalidOperation
 
 # Precisión máxima para cálculos financieros
 getcontext().prec = 50
 
-EXCHANGE_ID = "binance"
+# Fix imports
+ROOT_DIR = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT_DIR))
+from codigo.config import EXCHANGE_ID  # type: ignore
 base_dir = os.path.dirname(__file__)
 
 # Rutas de entrada/salida (con subcarpeta binance)
@@ -54,10 +59,11 @@ for _, row in df_pares.iterrows():
 
     # Si hay precio directo del par en el CSV de entrada, lo usamos para el cálculo indirecto
     # (este CSV suele traer '1_base_equivale_x_quote' y '1_quote_equivale_x_base' cuando CCXT lo devolvió)
-    p_base_en_quote = row.get('1_base_equivale_x_quote', '')
-    if p_base_en_quote and p_base_en_quote.lower() != 'nan':
+    raw_val = row.get('1_base_equivale_x_quote', '')
+    sval = str(raw_val).strip()
+    if sval and sval.lower() != 'nan':
         try:
-            p_base_en_quote = Decimal(str(p_base_en_quote))
+            p_base_en_quote = Decimal(sval)
         except (InvalidOperation, ValueError):
             p_base_en_quote = None
     else:
@@ -90,5 +96,5 @@ df_final = pd.DataFrame(filas)
 os.makedirs(os.path.dirname(path_salida), exist_ok=True)
 df_final.to_csv(path_salida, index=False)
 
-print("✅ Archivo generado (Binance):")
+print("✅ Archivo generado:")
 print(f"📄 {path_salida}")

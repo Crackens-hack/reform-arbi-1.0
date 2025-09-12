@@ -36,3 +36,39 @@ Reglas y referencia
 
 Bitácora local
 - Usa este archivo para apuntar decisiones, dudas y acuerdos del contenedor refinery.
+
+---
+
+Visión refinada (motor_data_refinery)
+- Pipeline `codigo/` (orden sugerido por prefijos numéricos):
+  1) `1_generar_schemas.py`: inferir estructura desde CCXT → referencia.
+  2) `2_crear_estructura_y_llenar.py`: crear tablas `sym_*` y poblar desde schema manual.
+  3) `3_validar_binance.py`: validar DB `sym_*` vs `exchange.markets` con aplanado consistente.
+  4) `4_generar_tabla_unificada.py`: unificar vistas/tablas estructurales.
+  5) `5_generar_tabla_filtrada_activos.py`: filtrar activos según criterios.
+  6) `6_symbolos_separacion.py`: separación/utilidades por símbolo.
+  7) `7_generar_cotizaciones_directas.py`: cotizaciones directas.
+  8) `8_generar_ruteables.py`: rutas A→B→C ruteables.
+  9) `9_ordenamiento_quote-o-solo-base.py`: orden/criterios por quote/base.
+ 10) `10_generar_cotizaciones_indirectas_por_quote.py.py`: cotizaciones indirectas por quote (posible typo .py.py).
+ 11) `11_generar_cotizaciones_indirectas_por_base.py`: cotizaciones indirectas por base.
+ 12) `12_unificador_cotizaciones_reales.py`: unificación final de cotizaciones.
+- Config central (`codigo/config/config.py`): `EXCHANGE_ID=binance`, requiere `static/schema_funcional.py`, exporta auditoría CSV a `datos/estructural/` si `AUDIT_STRUCT_EXPORT=True`.
+- DB (`codigo/config/db.py`): `pymysql` con `.env` (DB_HOST/USER/PASSWORD/NAME). No hay `.env` en este contenedor aún.
+- Módulos adyacentes: `modulo_absorcion/` (triadas, absorción), `precalificador_primario/` (Dockerfile/reqs), `dev/` utilidades.
+
+Objetivos inmediatos (propuesta)
+- A) Verificar/definir `.env` local con credenciales DB para `pymysql`.
+- B) Corregir inconsistencia de nombre: `10_generar_cotizaciones_indirectas_por_quote.py.py` → confirmar si debe ser `.py` único.
+- C) Documentar en `README.md` el flujo paso-a-paso y prerequisitos (schema manual, `.env`, permisos DB) y enlazar desde aquí.
+- D) Validar que `static/schema_funcional.py` refleja el estado actual deseado para Binance; actualizar si cambió el modelo de CCXT.
+- E) Asegurar que exportes CSV de auditoría son consumidos por siguientes pasos o limpiar si sobran.
+
+Dudas para Dominus
+- ¿Confirmamos que el pipeline 1→12 es el orden de ejecución esperado en producción?
+- ¿Se usa `modulo_absorcion/` dentro de refinery hoy o queda para análisis offline? Definir integración.
+- ¿Formato de rutas ruteables (8) y unificación final (12): contrato de salida esperado para `motor_reactor_realtime`?
+- ¿Nomenclatura correcta para `6_symbolos_separacion.py` (quedará así o renombramos a `simbolos_...`)?
+
+Notas
+- `static/schema_funcional.py` existe. `.env` no existe aún.

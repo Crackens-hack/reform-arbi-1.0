@@ -2,7 +2,13 @@
 """
 Genera cotizaciones directas contra la moneda de referencia (USDT, USDC, etc.)
 usando la tabla indicada en static/config_cotizacion_directa.csv.
-Salida: un único CSV con equivalencias base <-> quote.
+
+Objetivo: producir el mismo producto que el precalificador histórico, pero
+parametrizado por exchange (config.EXCHANGE_ID) y directorios por exchange.
+
+Salidas compatibles con el unificador y módulo de absorción:
+- codigo/datos/<exchange>/cotizaciones_directas_usdt/1_a_cotizaciones_usdt.csv
+    columnas: symbol, base, quote, 1_base_equivale_usdt, 1_usdt_equivale_base
 """
 
 import pandas as pd
@@ -14,7 +20,7 @@ import sys
 # --- Fix imports ---
 ROOT_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT_DIR))
-from codigo.config import DATOS_DIR
+from codigo.config import DATOS_DIR, EXCHANGE_ID, CCXT_OPTIONS
 
 CONFIG_FILE = ROOT_DIR / "codigo" / "static" / "config_cotizacion_directa.csv"
 
@@ -47,11 +53,9 @@ def main():
     if df_in.empty:
         raise RuntimeError(f"⚠️ {tabla_origen} está vacío.")
 
-    # CCXT – Binance
-    exchange = ccxt.binance({
-        "enableRateLimit": True,
-        "options": {"adjustForTimeDifference": True}
-    })
+    # CCXT – exchange desde config
+    ex_class = getattr(ccxt, EXCHANGE_ID)
+    exchange = ex_class(CCXT_OPTIONS)
     exchange.load_markets()
 
     cotizaciones = []
@@ -69,8 +73,8 @@ def main():
                 "symbol": symbol,
                 "base": base,
                 "quote": quote,
-                "precio": precio,                 # 1 base equivale a X quote
-                "inverso": (Decimal("1")/precio) if precio != 0 else None  # 1 quote equivale a Y base
+                "1_base_equivale_usdt": precio,  # 1 base equivale a X USDT
+                "1_usdt_equivale_base": (Decimal("1")/precio) if precio != 0 else None
             })
         except Exception as e:
             print(f"⚠️ Error {symbol}: {e}")
@@ -78,20 +82,28 @@ def main():
     if not cotizaciones:
         raise RuntimeError("❌ No se generaron cotizaciones.")
 
-    # Salida en datos/cotizaciones/
-    out_dir = DATOS_DIR / "cotizaciones"
+    # Salida por exchange para compatibilidad con unificador/absorción
+    out_dir = DATOS_DIR / EXCHANGE_ID / "cotizaciones_directas_usdt"
     out_dir.mkdir(parents=True, exist_ok=True)
-    output_csv = out_dir / f"cotizaciones_{interesado_en}.csv"
+    output_csv = out_dir / "1_a_cotizaciones_usdt.csv"
 
     df = pd.DataFrame(cotizaciones)
-
-    # 🔧 Limitar decimales de salida
-    df["precio"] = df["precio"].apply(lambda x: f"{x:.10f}")
-    df["inverso"] = df["inverso"].apply(lambda x: f"{x:.18f}" if x is not None else "")
+    # 🔧 Limitar decimales de salida (mantén precisión alta)
+    df["1_base_equivale_usdt"] = df["1_base_equivale_usdt"].apply(lambda x: f"{x:.10f}")
+    df["1_usdt_equivale_base"] = df["1_usdt_equivale_base"].apply(lambda x: f"{x:.18f}" if x is not None else "")
 
     df.to_csv(output_csv, index=False)
 
-    print(f"✅ Cotizaciones generadas en: {output_csv} ({len(df)} filas)")
+    # CSV plano {base: 1_usdt_equivale_base} para pasos indirectos
+    plano_csv = out_dir / "2_a_usdt_equivale_base.csv"
+    df_plano = (
+        df[["base", "1_usdt_equivale_base"]]
+        .dropna(subset=["1_usdt_equivale_base"])
+    )
+    df_plano.to_csv(plano_csv, index=False)
+
+    print(f"✅ Cotizaciones directas generadas en: {output_csv} ({len(df)} filas)")
+    print(f"✅ Equivalencias planas generadas en: {plano_csv}")
 
 if __name__ == "__main__":
     main()

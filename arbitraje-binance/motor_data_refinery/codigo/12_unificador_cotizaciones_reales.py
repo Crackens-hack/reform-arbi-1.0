@@ -1,6 +1,8 @@
 # ruta: /codigo/binance/unificar_cotizaciones_usdt.py
 
 import os
+import sys
+from pathlib import Path
 import pandas as pd
 from decimal import Decimal, getcontext
 
@@ -8,7 +10,9 @@ from decimal import Decimal, getcontext
 getcontext().prec = 50
 
 # Directorios base (con subcarpeta por exchange)
-EXCHANGE_ID = "binance"
+ROOT_DIR = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT_DIR))
+from codigo.config import EXCHANGE_ID  # usar config central
 base_dir = os.path.dirname(__file__)
 
 path_quote   = os.path.join(base_dir, 'datos', EXCHANGE_ID, 'previo_a_cotizar', 'cotizaciones_indirectas_por_quote.csv')
@@ -63,7 +67,8 @@ os.makedirs(os.path.dirname(path_salida), exist_ok=True)
 df_total.to_csv(path_salida, index=False)
 
 # Guardar copia para módulo de absorción (carpeta hermana de /codigo/)
-path_absorcion_dir = os.path.join(os.path.dirname(os.path.dirname(base_dir)), 'modulo_absorcion')
+# Copia para módulo de absorción dentro del mismo repo del motor
+path_absorcion_dir = os.path.join(os.path.dirname(base_dir), 'modulo_absorcion')
 os.makedirs(path_absorcion_dir, exist_ok=True)
 archivo_absorcion = os.path.join(path_absorcion_dir, 'cotizaciones_equivalentes_1_usdt.csv')
 df_total.to_csv(archivo_absorcion, index=False)

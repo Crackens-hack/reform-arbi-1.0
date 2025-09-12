@@ -1,2 +1,0 @@
-# Próximos pasos (breve)
-

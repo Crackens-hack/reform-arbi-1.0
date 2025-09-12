@@ -1,13 +1,17 @@
 # ruta: /codigo/generar_cotizaciones_indirectas_por_base_binance.py
 
 import os
+import sys
+from pathlib import Path
 import pandas as pd
 from decimal import Decimal, getcontext, InvalidOperation
 
 # Precisión alta para evitar errores de redondeo
 getcontext().prec = 50
 
-EXCHANGE_ID = "binance"
+ROOT_DIR = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT_DIR))
+from codigo.config import EXCHANGE_ID  # type: ignore
 base_dir = os.path.dirname(__file__)
 
 # Rutas (con subcarpeta binance)
@@ -44,10 +48,11 @@ for _, row in df_base_solo.iterrows():
     symbol = str(row.get('symbol', '')).strip()
 
     # Precio directo del par (1 BASE en QUOTE) si vino en el CSV
-    p_base_en_quote = row.get('1_base_equivale_x_quote', '')
-    if p_base_en_quote and p_base_en_quote.lower() != 'nan':
+    raw_val = row.get('1_base_equivale_x_quote', '')
+    sval = str(raw_val).strip()
+    if sval and sval.lower() != 'nan':
         try:
-            p_base_en_quote = Decimal(str(p_base_en_quote))
+            p_base_en_quote = Decimal(sval)
         except (InvalidOperation, ValueError):
             p_base_en_quote = None
     else:
@@ -79,5 +84,5 @@ os.makedirs(os.path.dirname(path_salida), exist_ok=True)
 df_resultado = pd.DataFrame(filas)
 df_resultado.to_csv(path_salida, index=False)
 
-print("✅ Archivo generado (Binance) con equivalencias por base:")
+print("✅ Archivo generado con equivalencias por base:")
 print(f"📄 {path_salida}")

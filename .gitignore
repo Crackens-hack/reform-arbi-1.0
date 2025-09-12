@@ -30,4 +30,4 @@ dev/
 /arbitraje-binance/motor_data_refinery/precalificador_primario/
 
 # Salidas de data refinery
-output_data_refinery/
+/arbitraje-binance/**/output_data_refinery/

@@ -10,4 +10,4 @@ Estado y nombres
 
 Integración
 - Los motores/sentinels se conectan por WebSocket (variable `HUB_WS_URL`, por defecto `ws://event_hub:8080/ws`).
-- No requiere montar `codex-rules` durante simbiosis; hoy se documenta aquí su propósito.
+- No requiere montar `codex-rules-containers` durante simbiosis; hoy se documenta aquí su propósito.

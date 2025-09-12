@@ -18,6 +18,9 @@ datos/
 
 dev/
 
+# Dev de todos los motores
+arbitraje-binance/**/dev/
+
 # Referencias no modificables
 /arbitraje-binance/motor_data_refinery/precalificador_primario/
 

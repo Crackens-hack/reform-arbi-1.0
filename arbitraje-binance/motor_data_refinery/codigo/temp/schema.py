@@ -83,6 +83,7 @@ schema = {
         "allowTrailingStop": "bool",
         "cancelReplaceAllowed": "bool",
         "amendAllowed": "bool",
+        "pegInstructionsAllowed": "bool",
         "isSpotTradingAllowed": "bool",
         "isMarginTradingAllowed": "bool",
         "filters": "[any]",

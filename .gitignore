@@ -38,3 +38,6 @@ dev/
 
 # Salida a nivel de arbitraje-binance
 /arbitraje-binance/output_data_refinery/
+
+#sincronización con Google Drive
+.sync/

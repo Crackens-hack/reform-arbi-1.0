@@ -1,0 +1,127 @@
+.
+├── arbitraje-binance
+│   ├── .vscode
+│   │   └── settings.json
+│   ├── custom-codex-realtime
+│   │   ├── entorno.txt
+│   │   ├── fundaments-git.txt
+│   │   ├── history_commits.txt
+│   │   ├── history_git.txt
+│   │   ├── intencion-proyecto-y-gpt.txt
+│   │   └── notas_rapidas.txt
+│   ├── custom-codex-refinery
+│   │   ├── entorno.txt
+│   │   ├── fundaments-git.txt
+│   │   ├── history_commits.txt
+│   │   ├── history_git.txt
+│   │   ├── intencion-proyecto-y-gpt.txt
+│   │   └── notas_rapidas.txt
+│   ├── custom-codex-sentinel
+│   │   ├── entorno.txt
+│   │   ├── fundaments-git.txt
+│   │   ├── history_commits.txt
+│   │   ├── history_git.txt
+│   │   ├── intencion-proyecto-y-gpt.txt
+│   │   └── notas_rapidas.txt
+│   ├── motor_data_refinery
+│   │   ├── codigo-nuevo
+│   │   │   ├── config
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── config.py
+│   │   │   │   └── db.py
+│   │   │   ├── static
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── campos_estandar.py
+│   │   │   │   ├── config_cotizacion_directa.csv
+│   │   │   │   ├── config_cotizacion_indirecta.csv
+│   │   │   │   ├── config_separador.csv
+│   │   │   │   ├── criterios_filtrados.csv
+│   │   │   │   ├── fiat.py
+│   │   │   │   ├── referencia_tabla_unica.py
+│   │   │   │   └── schema_funcional.py
+│   │   │   ├── temp
+│   │   │   │   ├── __init__.py
+│   │   │   │   └── schema.py
+│   │   │   ├── 0_mapear_campos_estandar.py
+│   │   │   ├── 10_generar_cotizaciones_indirectas_por_quote.py
+│   │   │   ├── 11_generar_cotizaciones_indirectas_por_base.py
+│   │   │   ├── 12_unificador_cotizaciones_reales.py
+│   │   │   ├── 1_generar_schemas.py
+│   │   │   ├── 2_crear_estructura_y_llenar.py
+│   │   │   ├── 3_validar_binance.py
+│   │   │   ├── 4_generar_tabla_unificada.py
+│   │   │   ├── 5_generar_tabla_filtrada_activos.py
+│   │   │   ├── 6_symbolos_separacion.py
+│   │   │   ├── 6a_generar_cotizador_directo_desde_ccxt.py
+│   │   │   ├── 7_generar_cotizaciones_directas.py
+│   │   │   ├── 8_generar_ruteables.py
+│   │   │   ├── 8a_preparar_pares_indirectos_filtrados.py
+│   │   │   ├── 9_ordenamiento_quote-o-solo-base.py
+│   │   │   └── __init__.py
+│   │   ├── modulo_absorcion
+│   │   │   ├── datos
+│   │   │   │   ├── kraken_orderbook_realtime.json
+│   │   │   │   └── kraken_schema_orderbook.json
+│   │   │   ├── triadas_por_forma
+│   │   │   │   ├── forma_1_000.csv
+│   │   │   │   ├── forma_2_001.csv
+│   │   │   │   ├── forma_3_010.csv
+│   │   │   │   ├── forma_4_011.csv
+│   │   │   │   ├── forma_5_100.csv
+│   │   │   │   ├── forma_6_101.csv
+│   │   │   │   ├── forma_7_110.csv
+│   │   │   │   └── forma_8_111.csv
+│   │   │   ├── 1_generar_equivalente_1millon.py
+│   │   │   ├── 2_simulador_multi_slippage.py.py
+│   │   │   ├── 3_simulador_absorcion_graba_en_db.py
+│   │   │   ├── 4_clasificar_snapshot_por_absorcion.py
+│   │   │   ├── 5_triadas.py
+│   │   │   ├── 6_unificador_de_triadas.py
+│   │   │   ├── 7_extraer_pares_involucrados_triadas.py
+│   │   │   ├── 8_exportador.py
+│   │   │   ├── absorcion_descartados.csv
+│   │   │   ├── absorcion_filtrada.csv
+│   │   │   ├── cotizaciones_equivalentes_1_millon_usdt.csv
+│   │   │   ├── cotizaciones_equivalentes_1_usdt.csv
+│   │   │   ├── pares_involucrados.csv
+│   │   │   ├── snapshot_multi_slippage.csv
+│   │   │   └── todas_las_triadas.csv
+│   │   ├── Dockerfile
+│   │   ├── README.md
+│   │   ├── __init__.py
+│   │   ├── entrypoint.sh
+│   │   └── requirements.txt
+│   ├── motor_reactor_realtime
+│   │   ├── Dockerfile
+│   │   ├── README.md
+│   │   ├── README_LOCAL.md
+│   │   ├── entrypoint.sh
+│   │   ├── go.mod
+│   │   ├── go.sum
+│   │   └── main.go
+│   ├── motor_sentinel
+│   │   ├── AGENTS.md
+│   │   ├── Dockerfile
+│   │   ├── README.md
+│   │   ├── calc.py
+│   │   ├── entrypoint.sh
+│   │   └── main.py
+│   ├── .dockerignore
+│   ├── .env
+│   ├── AGENTS.md
+│   ├── Makefile
+│   ├── README.md
+│   └── docker-compose.yml
+├── beacon_node
+│   ├── cmd
+│   │   └── event_hub
+│   │       └── main.go
+│   ├── .env
+│   ├── Dockerfile
+│   ├── README.md
+│   ├── docker-compose.yml
+│   └── go.mod
+├── .gitignore
+├── AGENTS.md
+├── ARQUITECTURA.md
+└── README.md

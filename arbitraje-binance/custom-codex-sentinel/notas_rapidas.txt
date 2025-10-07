@@ -1,3 +1,0 @@
-# notas_rapidas — sentinel
-# Boceto mental de Dominus. No autoritativo. Si contradice reglas/visión, priorizar `codex-rules` y `entorno.txt`.
-
